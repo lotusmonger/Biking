@@ -295,9 +295,10 @@ void StickComplete();
 
 // Define some NeoPatterns for the two rings and the stick
 //  as well as some completion routines
-NeoPatterns Ring1(24, 5, NEO_GRB + NEO_KHZ800, &Ring1Complete);
-NeoPatterns Ring2(16, 6, NEO_GRB + NEO_KHZ800, &Ring2Complete);
-NeoPatterns Stick(16, 7, NEO_GRB + NEO_KHZ800, &StickComplete);
+NeoPatterns Ring1(12, 3, NEO_GRB + NEO_KHZ800, &Ring1Complete);
+NeoPatterns Ring2(12, 5, NEO_GRB + NEO_KHZ800, &Ring2Complete);
+NeoPatterns Stick1(12, 9, NEO_GRB + NEO_KHZ800, &StickComplete);
+NeoPatterns Stick2(12, 11, NEO_GRB + NEO_KHZ800, &StickComplete);
 
 // Initialize everything and prepare to start
 void setup()
@@ -310,13 +311,14 @@ void setup()
     // Initialize all the pixelStrips
     Ring1.begin();
     Ring2.begin();
-    Stick.begin();
-    
+    Stick1.begin();
+    Stick2.begin();
+  
     // Kick off a pattern
-    Ring1.TheaterChase(Ring1.Color(255,255,0), Ring1.Color(0,0,50), 100);
-    Ring2.RainbowCycle(3);
-    Ring2.Color1 = Ring1.Color1;
-    Stick.Scanner(Ring1.Color(255,0,0), 55);
+    Ring1.Fade(Ring1.Color(255,255,0), Ring1.Color(0,0,50),50,100,FORWARD);
+    Ring2.Fade(Ring1.Color(0,255,0), Ring1.Color(100,0,50),50,100,FORWARD);
+    Stick1.Scanner(Ring1.Color(255,0,0), 55);
+    Stick2.Scanner(Ring1.Color(255,0,0), 55);
 }
 
 // Main loop
@@ -324,39 +326,11 @@ void loop()
 {
     // Update the rings.
     Ring1.Update();
-    Ring2.Update();    
+    Ring2.Update(); 
+  Stick1.Update(); 
+  Stick2.Update();
     
-    // Switch patterns on a button press:
-    if (digitalRead(8) == LOW) // Button #1 pressed
-    {
-        // Switch Ring1 to FASE pattern
-        Ring1.ActivePattern = FADE;
-        Ring1.Interval = 20;
-        // Speed up the rainbow on Ring2
-        Ring2.Interval = 0;
-        // Set stick to all red
-        Stick.ColorSet(Stick.Color(255, 0, 0));
-    }
-    else if (digitalRead(9) == LOW) // Button #2 pressed
-    {
-        // Switch to alternating color wipes on Rings1 and 2
-        Ring1.ActivePattern = COLOR_WIPE;
-        Ring2.ActivePattern = COLOR_WIPE;
-        Ring2.TotalSteps = Ring2.numPixels();
-        // And update tbe stick
-        Stick.Update();
-    }
-    else // Back to normal operation
-    {
-        // Restore all pattern parameters to normal values
-        Ring1.ActivePattern = THEATER_CHASE;
-        Ring1.Interval = 100;
-        Ring2.ActivePattern = RAINBOW_CYCLE;
-        Ring2.TotalSteps = 255;
-        Ring2.Interval = min(10, Ring2.Interval);
-        // And update tbe stick
-        Stick.Update();
-    }    
+   
 }
 
 //------------------------------------------------------------
@@ -366,38 +340,17 @@ void loop()
 // Ring1 Completion Callback
 void Ring1Complete()
 {
-    if (digitalRead(9) == LOW)  // Button #2 pressed
-    {
-        // Alternate color-wipe patterns with Ring2
-        Ring2.Interval = 40;
-        Ring1.Color1 = Ring1.Wheel(random(255));
-        Ring1.Interval = 20000;
-    }
-    else  // Retrn to normal
-    {
-      Ring1.Reverse();
-    }
+   
 }
-
 // Ring 2 Completion Callback
 void Ring2Complete()
 {
-    if (digitalRead(9) == LOW)  // Button #2 pressed
-    {
-        // Alternate color-wipe patterns with Ring1
-        Ring1.Interval = 20;
-        Ring2.Color1 = Ring2.Wheel(random(255));
-        Ring2.Interval = 20000;
-    }
-    else  // Retrn to normal
-    {
-        Ring2.RainbowCycle(random(0,10));
-    }
+   
 }
 
 // Stick Completion Callback
 void StickComplete()
 {
     // Random color change for next scan
-    Stick.Color1 = Stick.Wheel(random(255));
+    //Stick1.Color1 = Stick1.Wheel(random(255));
 }

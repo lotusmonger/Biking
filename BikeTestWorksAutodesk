@@ -297,9 +297,9 @@ void Stick2Complete();
 // Define some NeoPatterns for the two rings and the stick
 //  as well as some completion routines
 NeoPatterns Ring1(12, 3, NEO_GRB + NEO_KHZ800, &Ring1Complete);
-NeoPatterns Ring2(12, 5, NEO_GRB + NEO_KHZ800, &Ring2Complete);
-NeoPatterns Stick1(12, 9, NEO_GRB + NEO_KHZ800, &Stick1Complete);
-NeoPatterns Stick2(12, 11, NEO_GRB + NEO_KHZ800, &Stick2Complete);
+NeoPatterns Ring2(12, 11, NEO_GRB + NEO_KHZ800, &Ring2Complete);
+NeoPatterns Stick1(16, 5, NEO_GRB + NEO_KHZ800, &Stick1Complete);
+NeoPatterns Stick2(16, 9, NEO_GRB + NEO_KHZ800, &Stick2Complete);
 
 // Initialize everything and prepare to start
 void setup()
@@ -316,10 +316,10 @@ void setup()
     Stick2.begin();
   
     // Kick off a pattern
-    Ring1.Fade(Ring1.Color(255,255,0), Ring1.Color(0,0,50),50,100,FORWARD);
-    Ring2.Fade(Ring1.Color(0,255,0), Ring1.Color(100,0,50),50,100,FORWARD);
+    Ring1.Scanner(Ring1.Color(255,0,0), 55);
+    Ring2.Scanner(Ring1.Color(255,0,0), 55);
     Stick1.Scanner(Ring1.Color(255,0,0), 55);
-    Stick2.Scanner(Ring1.Color(255,0,0), 55);
+    Stick2.Scanner(Ring1.Color(255,0,0), 110);
 }
 
 // Main loop
@@ -353,7 +353,7 @@ void Ring2Complete()
 void Stick1Complete()
 {
     // Random color change for next scan
-    Stick1.Color1 = Stick1.Wheel(random(255));
+    Stick1.Color1 = Stick1.Wheel(random(125));
 }
 // Stick Completion Callback
 void Stick2Complete()
